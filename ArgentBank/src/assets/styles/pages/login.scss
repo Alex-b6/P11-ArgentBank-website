@@ -1,0 +1,84 @@
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    overflow: auto;
+}
+
+.bg-dark {
+    background-color: #12002b;
+}
+
+.sign-in-content {
+    box-sizing: border-box;
+    background-color: white;
+    width: 300px;
+    margin: auto;
+    margin-top: 3rem;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre */
+}
+
+.sign-in-icon {
+    font-size: 5rem;
+    color: #00bc77; /* Couleur personnalisée */
+    margin-bottom: 1rem; /* Espacement inférieur */
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 1.5rem; /* Augmentation de l'espacement */
+}
+
+.input-wrapper label {
+    font-weight: bold;
+    color: #333; /* Couleur personnalisée */
+}
+
+.input-wrapper input {
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Ajout d'une légère ombre */
+
+    &:focus {
+        outline: none;
+        border-color: #00bc77;
+    }
+}
+
+.input-remember {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem; /* Augmentation de l'espacement */
+}
+
+.input-remember label {
+    margin-left: 0.5rem; /* Augmentation de l'espacement */
+    color: #333; /* Couleur personnalisée */
+}
+
+.sign-in-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    background-color: #00bc77;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #007f4f;
+    }
+}
