@@ -1,29 +1,27 @@
 import '../styles/pages/login.scss';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../Redux/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
-function Login() {
-  const [username, setUsername] = useState('');
+const Login = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleRememberMeChange = () => {
-    setRememberMe(!rememberMe);
-  };
+  const [rememberMe, setRememberMe] = useState(false); 
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //logique de soumission de formulaire ici
+    dispatch(login({ email, password, rememberMe }));
   };
+
+  useEffect(() => {
+    if (auth.status === 'succeeded') {
+      navigate('/user');
+    }
+  }, [auth.status, navigate]);
 
   return (
     <main className="main bg-dark">
@@ -33,21 +31,40 @@ function Login() {
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>
-            <input type="text" id="username" value={username} onChange={handleUsernameChange} />
+            <input
+              type="text"
+              id="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
           </div>
           <div className="input-wrapper">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" value={password} onChange={handlePasswordChange} />
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="remember-me" checked={rememberMe} onChange={handleRememberMeChange} />
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
             <label htmlFor="remember-me">Remember me</label>
           </div>
           <button type="submit" className="sign-in-button">Sign In</button>
         </form>
+        {auth.status === 'loading' && <p>Loading...</p>}
+        {auth.status === 'failed' && <p>Error: {auth.error}</p>}
       </section>
     </main>
   );
-}
+};
 
 export default Login;
