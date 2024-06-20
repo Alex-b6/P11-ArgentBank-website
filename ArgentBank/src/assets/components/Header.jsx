@@ -2,50 +2,34 @@ import React from 'react';
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../Redux/userReducer';
+import Logo from './Logo';
+import UserLinks from './UserLinks';
+import GuestLinks from './GuestLinks';
 
 import '../styles/components/header.scss';
 
 const Header = () => {
   const dispatch = useDispatch();
-
+  // Utilisation du hook useSelector pour accéder à l'état global Redux, notamment le token et les informations utilisateur
   const { token, user } = useSelector(state => state.user);
-
+  // Fonction de gestion de la déconnexion
   const handleLogout = () => {
       dispatch(logout());
       console.log(logout())
   }
 
-  return (
+  return (// optimiser avec React - Nav faire un composant reusable
     <nav className="main-nav">
-      <NavLink to="/" className="main-nav-logo">
-        <img
-          className="main-nav-logo-image"
-          src="/img/argentBankLogo.png"
-          alt="Argent Bank Logo"
-        />
-        <h1 className="sr-only">Argent Bank</h1>
-      </NavLink>
-      <div className="main-nav-items">
-      {token ?
-          <>
-            <NavLink to="/Profile" className="main-nav-item">
-              <i className="fa fa-user-circle"></i>
-              {user.userName}
-            </NavLink>
-            <NavLink to="/" className="main-nav-item" onClick={handleLogout}>
-              <i className="fa fa-sign-out"></i>
-              Sign Out
-            </NavLink>
-          </>
-         : 
-          <NavLink to="/login" className="main-nav-item">
-            <i className="fa fa-user-circle"></i>
-            Sign In
-          </NavLink>
-      }
-      </div>
-    </nav>
-  );
+    <Logo />
+    <div className="main-nav-items">
+      {token ? (
+        <UserLinks userName={user?.userName} handleLogout={handleLogout} />
+      ) : (
+        <GuestLinks />
+      )}
+    </div>
+  </nav>
+);
 };
 
 export default Header;

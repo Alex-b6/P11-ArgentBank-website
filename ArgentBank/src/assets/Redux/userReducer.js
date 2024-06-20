@@ -46,6 +46,8 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = null; // Réinitialisation des données de l'utilisateur
       state.token = null; // Réinitialisation du jeton d'authentification
+      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
     },
   },
 });

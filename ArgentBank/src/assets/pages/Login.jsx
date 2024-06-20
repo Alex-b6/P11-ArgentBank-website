@@ -6,14 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import { startRequest, loginSuccess, loginFailure } from '../Redux/userReducer';
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const error = useSelector(state => state.user.error);
-
+  const dispatch = useDispatch();// Utilisation du hook useDispatch pour obtenir la méthode de dispatch Redux
+  const navigate = useNavigate();// Utilisation du hook useNavigate pour naviguer entre les pages
+  const error = useSelector(state => state.user.error);// Utilisation du hook useSelector pour accéder à l'état global Redux, notamment l'erreur d'authentification
+  // Fonction de gestion de la soumission du formulaire
   const handleSubmit = async (event) => {
-      event.preventDefault();
-      dispatch(startRequest());
+      event.preventDefault();// Empêche le rechargement de la page lors de la soumission du formulaire
+      dispatch(startRequest());// Déclenche l'action de début de requête
 
+      // Récupération des valeurs des champs email et mot de passe
       const email = event.target.elements.email.value;
       const password = event.target.elements.password.value;
 
@@ -23,18 +24,22 @@ const Login = () => {
               password: password
           });
 
-          const data = response.data;
-          if (data.body && data.body.token) {
+          const data = response.data;// Récupération des données de la réponse
+          /*console.log('API Response:', data);*/ // test réponse API
+          if (data.body && data.body.token) {// Vérification de la présence du token
+              sessionStorage.setItem('token', data.body.token);
+              /*console.log('Token stored in sessionStorage:', sessionStorage.getItem('token'));*/ // test Token
               dispatch(loginSuccess({
                   user: { email: email },
                   token: data.body.token
               }));
 
-              navigate('/profile');
+              navigate('/profile');// Redirection vers la page de profil
           } else {
               dispatch(loginFailure({ error: 'Login failed.' }));
           }
       } catch (error) {
+          /*console.error('Login Error:', error);*/ // test erreur login
           dispatch(loginFailure({ error: 'Login failed. Please check your email and password and try again.' }));
       }
   };

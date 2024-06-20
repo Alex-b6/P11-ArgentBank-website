@@ -10,15 +10,16 @@ import {
 import '../styles/pages/profile.scss';
 
 const Profile = () => {
+  // Utilisation du hook useDispatch pour obtenir la méthode de dispatch Redux
   const dispatch = useDispatch();
-
+  // Utilisation du hook useSelector pour accéder à l'état global de Redux
   const { user, isLoading, error, token } = useSelector(state => state.user);
-
+  // Définition des états locaux avec useState
   const [isEditing, setIsEditing] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
-
+  // Hook useEffect pour mettre à jour les champs de formulaire quand l'utilisateur change
   useEffect(() => {
     if (user) {
       setFirstName(user.firstName || '');
@@ -26,34 +27,34 @@ const Profile = () => {
       setUserName(user.userName || '');
     }
   }, [user]);
-
+   // Hook useEffect pour récupérer les données utilisateur lors du montage du composant
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(startRequest());
+      dispatch(startRequest());// Début de requête
       try {
         const response = await axios.post(
           'http://localhost:3001/api/v1/user/profile',
           {},
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,// Envoi du token pour authentification
             },
           }
         );
-        dispatch(getProfileSuccess({ user: response.data.body }));
+        dispatch(getProfileSuccess({ user: response.data.body }));// Déclenchement de l'action de succès avec les données utilisateur
       } catch (error) {
-        dispatch(getProfileFailure({ error: error.message }));
+        dispatch(getProfileFailure({ error: error.message }));// Déclenchement de l'action d'échec en cas d'erreur
       }
     };
-    fetchData();
+    fetchData();// Appel de la fonction de récupération des données
   }, [dispatch, token]);
-
+  // Gestion du clic sur le bouton d'édition
   const handleEditClick = () => {
-    setIsEditing(true);
+    setIsEditing(true);// Activation du mode édition
   };
-
+  // Gestion du clic sur le bouton de sauvegarde
   const handleSaveClick = async () => {
-    setIsEditing(false);
+    setIsEditing(false);// Désactive le mode édition
 
     const updatedUser = {
       firstName: firstName,
@@ -98,9 +99,19 @@ const Profile = () => {
             <div className='changeName'>
               <div className='positionInput'>
                 <label htmlFor="firstName">Prénom :</label>
-                <span>{firstName}</span>
+                <input
+                  type="text"
+                  id="firstName"
+                  value={firstName}
+                  readOnly //utilisation pour éviter la modification
+                />
                 <label htmlFor="lastName">Nom :</label>
-                <span>{lastName}</span>
+                <input
+                  type="text"
+                  id="lastName"
+                  value={lastName}
+                  readOnly //utilisation pour éviter la modification
+                />
                 <label htmlFor="userName">Nom d'utilisateur :</label>
                 <input
                   type="text"
