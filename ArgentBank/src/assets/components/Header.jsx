@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../Redux/userReducer';
 import Logo from './Logo';
@@ -15,10 +14,10 @@ const Header = () => {
   // Fonction de gestion de la déconnexion
   const handleLogout = () => {
       dispatch(logout());
-      console.log(logout())
+      /*console.log(logout())*/
   }
 
-  return (// optimiser avec React - Nav faire un composant reusable
+  return (
     <nav className="main-nav">
     <Logo />
     <div className="main-nav-items">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import {
@@ -6,12 +7,14 @@ import {
   getProfileSuccess,
   getProfileFailure,
   updateProfileSuccess,
+  clearToken,
 } from '../Redux/userReducer';
 import '../styles/pages/profile.scss';
 
 const Profile = () => {
   // Utilisation du hook useDispatch pour obtenir la méthode de dispatch Redux
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Hook pour la navigation
   // Utilisation du hook useSelector pour accéder à l'état global de Redux
   const { user, isLoading, error, token } = useSelector(state => state.user);
   // Définition des états locaux avec useState
@@ -19,6 +22,21 @@ const Profile = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
+
+ // Effect pour gérer la déconnexion lors de l'actualisation
+ useEffect(() => {
+  const handleBeforeUnload = (event) => {
+    // Exécute clearToken si l'utilisateur actualise la page ou navigue loin
+    dispatch(clearToken());
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, [dispatch]);
+
   // Hook useEffect pour mettre à jour les champs de formulaire quand l'utilisateur change
   useEffect(() => {
     if (user) {
@@ -30,6 +48,12 @@ const Profile = () => {
    // Hook useEffect pour récupérer les données utilisateur lors du montage du composant
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) {
+        dispatch(clearToken()); // Vider le token de l'état global
+        sessionStorage.removeItem('token');
+        navigate('/login'); // Redirige vers la page d'accueil si le token est absent
+        return;
+      }
       dispatch(startRequest());// Début de requête
       try {
         const response = await axios.post(
@@ -44,10 +68,13 @@ const Profile = () => {
         dispatch(getProfileSuccess({ user: response.data.body }));// Déclenchement de l'action de succès avec les données utilisateur
       } catch (error) {
         dispatch(getProfileFailure({ error: error.message }));// Déclenchement de l'action d'échec en cas d'erreur
+        dispatch(clearToken()); // Vider le token de l'état global
+        sessionStorage.removeItem('token'); // Supprimer le token de sessionStorage
+        navigate('/login');
       }
     };
     fetchData();// Appel de la fonction de récupération des données
-  }, [dispatch, token]);
+  }, [dispatch, token, navigate]);
   // Gestion du clic sur le bouton d'édition
   const handleEditClick = () => {
     setIsEditing(true);// Activation du mode édition

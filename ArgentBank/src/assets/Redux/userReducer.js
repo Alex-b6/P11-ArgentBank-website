@@ -49,6 +49,9 @@ const userSlice = createSlice({
       sessionStorage.removeItem('token');
       localStorage.removeItem('token');
     },
+    clearToken: (state) => { // Ajout de l'action clearToken
+      state.token = null;
+    },
   },
 });
 
@@ -62,6 +65,7 @@ export const {
   updateProfileSuccess,
   updateProfileFailure,
   logout,
+  clearToken,
 } = userSlice.actions;
 
 export default userSlice.reducer;
