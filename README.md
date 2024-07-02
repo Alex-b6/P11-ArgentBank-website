@@ -41,6 +41,14 @@ npm run populate-db
 
 Your server should now be running at http://locahost:3001 and you will now have two users in your MongoDB database!
 
+After this, open another terminal and run :
+
+# select the frontEnd folder
+cd ArgentBank
+
+# start the local dev
+npm run dev
+
 ## Populated Database Data
 
 Once you run the `populate-db` script, you should have two users in your database:
