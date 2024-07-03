@@ -26,7 +26,7 @@ const Profile = () => {
  // Effect pour gérer la déconnexion lors de l'actualisation
  useEffect(() => {
   const handleBeforeUnload = (event) => {
-    // Exécute clearToken si l'utilisateur actualise la page ou navigue loin
+    // Exécute clearToken si l'utilisateur actualise la page
     dispatch(clearToken());
   };
 
@@ -35,7 +35,7 @@ const Profile = () => {
   return () => {
     window.removeEventListener('beforeunload', handleBeforeUnload);
   };
-}, [dispatch]);
+  }, [dispatch]);
 
   // Hook useEffect pour mettre à jour les champs de formulaire quand l'utilisateur change
   useEffect(() => {
@@ -68,9 +68,6 @@ const Profile = () => {
         dispatch(getProfileSuccess({ user: response.data.body }));// Déclenchement de l'action de succès avec les données utilisateur
       } catch (error) {
         dispatch(getProfileFailure({ error: error.message }));// Déclenchement de l'action d'échec en cas d'erreur
-        dispatch(clearToken()); // Vider le token de l'état global
-        sessionStorage.removeItem('token'); // Supprimer le token de sessionStorage
-        navigate('/login');
       }
     };
     fetchData();// Appel de la fonction de récupération des données
